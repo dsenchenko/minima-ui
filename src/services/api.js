@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-// ToDo: fix env vars
+// Using the proxied endpoint instead of direct URL
 const API_BASE_URL = "/upload/";
-// const API_BASE_URL = "https://minima-upload.vitaliti.org/upload/";
 console.log('import.meta.env.VITE_WS_URL', import.meta.env);
 
 export const uploadFiles = async (userId, files) => {

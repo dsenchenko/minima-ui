@@ -32,15 +32,8 @@ const Chat = () => {
             }
         }
     };
-
     return (
         <div className="text-col">
-            {/*<div className="connection-status">*/}
-            {/*    <span className={isConnected ? 'status-connected' : 'status-disconnected'}>*/}
-            {/*        {isConnected ? 'Connected' : 'Disconnected'}*/}
-            {/*    </span>*/}
-            {/*</div>*/}
-
             {messages.length === 0 ? (
                 <div className="initial-scene">
                     <img src="../img/welcome.svg" alt="Welcome" />
