@@ -23,7 +23,7 @@ function App() {
         }
 
         // Load selected user's messages or start empty chat
-        setMessages(() => localChats[user.id] || []);
+        // setMessages(() => localChats[user.id] || []);
         setSelectedUser(user);
     };
 

@@ -1,8 +1,7 @@
 import { create } from "zustand";
 import { uploadFiles, getUploadedFiles } from "../services/api";
 
-// Ensure the URL is correctly formatted without double slashes
-const WS_BASE_URL = "wss://minima-chat.vitaliti.org/chat";
+const WS_BASE_URL = "wss url here";
 
 const constructWebSocketUrl = (userId, conversationName, fileIds = []) => {
     if (!userId || !conversationName) {
@@ -16,7 +15,6 @@ const constructWebSocketUrl = (userId, conversationName, fileIds = []) => {
 
 const useChatStore = create((set, get) => ({
     messages: [],
-    setMessages: (updateFn) => set((state) => ({ messages: updateFn(state.messages) })),
     ws: null,
     isConnected: false,
     connectionAttempts: 0,
@@ -48,7 +46,12 @@ const useChatStore = create((set, get) => ({
                 const newMessage = JSON.parse(event.data);
                 if (newMessage.reporter === "output_message" && newMessage.message) {
                     set((state) => ({
-                        messages: [...state.messages, { text: newMessage.message, sender: "bot" }]
+                        messages: [...state.messages, { 
+                            id: Date.now(),
+                            text: newMessage.message, 
+                            sender: "bot",
+                            timestamp: new Date().toISOString()
+                        }]
                     }));
                 }
             } catch (error) {
@@ -58,6 +61,7 @@ const useChatStore = create((set, get) => ({
 
         ws.onerror = (error) => {
             console.error("❌ WebSocket error:", error);
+            set({ isConnected: false });
         };
 
         ws.onclose = (event) => {
@@ -89,11 +93,6 @@ const useChatStore = create((set, get) => ({
         set({ fileIds: response.fileIds || [], uploading: false });
 
         await get().fetchUploadedFiles(userId);
-
-        const updatedFiles = get().uploadedFiles;
-        if (updatedFiles.length > 0) {
-            await get().connectWebSocket(userId, "default_conversation", updatedFiles.map(file => file.file_id));
-        }
     },
 
     fetchUploadedFiles: async (userId) => {
@@ -157,9 +156,6 @@ const useChatStore = create((set, get) => ({
             console.warn("WebSocket is not connected");
         }
     },
-
-    addMessage: (message) =>
-        set((state) => ({ messages: [...state.messages, message] })),
 
     clearMessages: () => set({ messages: [] }),
 }));

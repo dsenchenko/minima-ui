@@ -17,10 +17,13 @@ export default defineConfig({
   server: {
     proxy: {
       "/upload": {
-        target: "http://54.204.167.118:8001",
+        target: "api url here",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/upload/, "/upload"),
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+        },
       },
     },
   },
